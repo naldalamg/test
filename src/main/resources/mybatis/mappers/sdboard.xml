@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="sdboard">
+
+
+    <!-- 총 게시물 개수 구하기 -->
+    <select id="selectTotalNO" parameterType="searchCriteria" resultType="int">
+        SELECT COUNT(*)
+        FROM SODA_BOARD
+
+    </select>
+
+    <select id="selectListAll" parameterType="searchCriteria" resultType="sdboardVO">
+        SELECT ROWNUM "second", T.*
+          FROM (
+                SELECT ROWNUM "first", SD_BOARD_NO, SD_TITLE, SD_REGDATE, MEMBER_ID
+                  FROM SODA_BOARD
+                 ORDER BY SD_BOARD_NO DESC
+                ) T
+         WHERE "first" BETWEEN #{rowStart} AND #{rowEnd}
+    </select>
+
+    <select id="selectInfo" parameterType="String" resultType="sdboardVO">
+        SELECT SD_BOARD_NO, SD_TITLE, SD_CONTENT, SD_REGDATE, MEMBER_ID
+          FROM SODA_BOARD
+         WHERE SD_BOARD_NO = #{sd_board_NO}
+    </select>
+
+    <insert id="insertSDboard" parameterType="sdboardVO">
+        INSERT INTO SODA_BOARD
+            (
+             SD_BOARD_NO,
+             SD_TITLE, SD_CONTENT, MEMBER_ID
+            )
+        VALUES
+            (
+             TO_CHAR(SYSDATE,'MMDD')||LPAD(SEQ_SDBOARD_NO.NEXTVAL,3,0),
+             #{sd_title}, #{sd_content}, #{member_id}
+            )
+    </insert>
+
+    <update id="updateSDboard" parameterType="sdboardVO">
+        UPDATE SODA_BOARD
+           SET SD_TITLE = #{sd_title}, SD_CONTENT = #{sd_content}
+         WHERE SD_BOARD_NO = #{sd_board_NO}
+    </update>
+
+    <delete id="deleteSDboard" parameterType="String">
+        DELETE
+          FROM SODA_BOARD
+         WHERE SD_BOARD_NO = #{sd_board_NO}
+    </delete>
+</mapper>

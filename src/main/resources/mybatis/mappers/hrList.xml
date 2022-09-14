@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="hrList">
+
+    <!-- search -->
+    <sql id="search">
+        <if test="searchType != null">
+            <if test="searchType == 'e_ID'.toString()">
+                WHERE EMPLOYEE_ID LIKE '%' || #{keyword} || '%'
+            </if>
+            <if test="searchType == 'e_NAME'.toString()">
+                WHERE UPPER(FULL_NAME) LIKE '%' || UPPER(#{keyword}) || '%'
+            </if>
+            <if test="searchType == 'd_ID'.toString()">
+                WHERE DEPARTMENT_ID LIKE '%' || #{keyword} || '%'
+            </if>
+            <if test="searchType == 'd_NAME'.toString()">
+                WHERE UPPER(DEPARTMENT_NAME) LIKE '%' || UPPER(#{keyword}) || '%'
+            </if>
+            <if test="searchType == 'all'.toString()">
+                WHERE EMPLOYEE_ID LIKE '%' || #{keyword} || '%'
+                OR UPPER(FULL_NAME) LIKE '%' || UPPER(#{keyword}) || '%'
+                OR DEPARTMENT_ID LIKE '%' || #{keyword} || '%'
+                OR UPPER(DEPARTMENT_NAME) LIKE '%' || UPPER(#{keyword}) || '%'
+            </if>
+        </if>
+    </sql>
+
+     <!-- 총 개수 구하기-->
+    <select id="selectTotalNO" parameterType="SearchCriteria" resultType="int">
+        SELECT
+          COUNT(*)
+        FROM
+          EMPLOYEES E,
+          DEPARTMENTS D
+        WHERE
+          E.DEPARTMENT_ID = D.DEPARTMENT_ID
+    </select>
+
+    <!-- 직원정보 가져오기 -->
+    <select id="selectListAll" parameterType="SearchCriteria" resultType="hrListVO">
+        SELECT
+          ROWNUM "second",
+          S.*
+        FROM
+          (
+            SELECT
+              ROWNUM "first",
+              T.*
+            FROM
+              (
+                SELECT
+                  EMPLOYEE_ID,
+                  FIRST_NAME||' '||LAST_NAME AS FULL_NAME,
+                  D.DEPARTMENT_ID,
+                  DEPARTMENT_NAME
+                FROM
+                  EMPLOYEES E,
+                  DEPARTMENTS D
+                WHERE
+                  E.DEPARTMENT_ID = D.DEPARTMENT_ID
+                ORDER BY FULL_NAME ASC
+              ) T
+            <include refid="search"></include>
+          ) S
+        WHERE "first" BETWEEN #{rowStart} AND#{rowEnd}
+    </select>
+
+</mapper>
