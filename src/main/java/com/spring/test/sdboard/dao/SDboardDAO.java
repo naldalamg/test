@@ -13,7 +13,7 @@ import java.util.List;
 public class SDboardDAO extends AbstractDAO {
 
     public int selectTotalNO(String queryId, SearchCriteria criteria) throws SQLException{
-        return (int) selectOne(queryId, criteria);
+        return (Integer) selectOne(queryId, criteria);
     }
 
     public List selectListAll(String queryId, SearchCriteria criteria) throws SQLException{

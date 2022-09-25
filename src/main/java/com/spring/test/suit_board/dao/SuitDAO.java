@@ -16,7 +16,7 @@ public class SuitDAO extends AbstractDAO{
 
 	// 리스트 + 검색 + 페이징 (총 게시글 개수 구하기)
 	public int selectTotalNO(String queryId, SearchCriteria scri) throws SQLException{
-		int result = (int) selectOne(queryId, scri);
+		int result = (Integer) selectOne(queryId, scri);
 		return result;
 	}
 	

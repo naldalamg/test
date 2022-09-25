@@ -13,7 +13,7 @@ import java.util.List;
 public class HRListDAO extends AbstractDAO {
 
     public int selectTotalNO(String queryId, SearchCriteria scri) throws  SQLException{
-        int result = (int) selectOne(queryId, scri);
+        int result = (Integer) selectOne(queryId, scri);
         return result;
     }
 

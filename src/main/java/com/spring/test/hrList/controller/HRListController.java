@@ -33,4 +33,19 @@ public class HRListController {
         return "HRListForm";
     }
 
+    @RequestMapping(value="/mainHRListAjax.html")
+    public String mainHRListAjax(Model model, @ModelAttribute("scri") SearchCriteria scri) throws Exception{
+        List<HRListVO> hrList = hrListService.selectListAll("hrList.selectListAll", scri);
+        model.addAttribute("hrList",hrList);
+
+        //board paging
+        PageMaker pageMaker = new PageMaker();
+        pageMaker.setCri(scri);
+        pageMaker.setTotalCount(hrListService.selectTotalNO("hrList.selectTotalNO", scri));
+        model.addAttribute("pageMaker", pageMaker);
+        model.addAttribute("hrList", hrList);
+
+        return "jsonView";
+    }
+
 }

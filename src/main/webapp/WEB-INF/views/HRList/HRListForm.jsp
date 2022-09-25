@@ -11,12 +11,14 @@
 <head>
 <link href="${contextPath}/resources/css/suit/listSuit.css" rel="stylesheet"/>
 <link href="${contextPath}/resources/css/font.css" rel="stylesheet"/>
+<script src="${contextPath}/resources/js/list.js"></script>
 
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <script type="text/javascript">
 
     $(function(){
 
+    	getList();
         var validation_ck = false;
 
         $("#keywordInput").bind("keydown", function(event) {
@@ -42,14 +44,17 @@
         $('#suit_searchBtn').click(function() {
             self.location = "mainHRList.html?" + '${pageMaker.makeQuery(1)}' + "&searchType=" + $("select option:selected").val() + "&keyword=" + encodeURIComponent($('#keywordInput').val());
         });
+        
+        getList('${contextPath}/mainHRListAjax.html');
  	})
+
 </script>
 <meta charset="UTF-8">
 <title>Insert title here</title>
 </head>
 <body>
 
-<form method="get" >
+<form method="get" id='testForm'>
     <div id='HRList_boardwrap'>
         <div id='HRList_boardList'>
             <table>
@@ -61,15 +66,16 @@
                         <th id=th-s4>부서명</th>
                     </tr>
                 </thead>
-                <tbody>
-                	<c:forEach var="item" items="${hrList }">
+                <tbody id='boardList'>
+                	<%-- <c:forEach var="item" items="${hrList }">
                     	<tr class='HRList_content'>
                     		<td>${item.employee_id }</td>
                     		<td>${item.full_name }</td>
                     		<td>${item.department_id }</td>
                     		<td>${item.department_name }</td>
                     	</tr>
-                 	</c:forEach>
+                    	$('#chart-HCA-04').parent().find('.fromDt2').val()
+                 	</c:forEach> --%>
                 </tbody>
             </table>
         </div>
